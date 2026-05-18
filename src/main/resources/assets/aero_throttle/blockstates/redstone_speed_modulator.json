@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "aero_throttle:block/redstone_speed_modulator" },
+    "facing=east":  { "model": "aero_throttle:block/redstone_speed_modulator", "y": 90 },
+    "facing=south": { "model": "aero_throttle:block/redstone_speed_modulator", "y": 180 },
+    "facing=west":  { "model": "aero_throttle:block/redstone_speed_modulator", "y": 270 },
+    "facing=up":    { "model": "aero_throttle:block/redstone_speed_modulator", "x": 90 },
+    "facing=down":  { "model": "aero_throttle:block/redstone_speed_modulator", "x": 270 }
+  }
+}

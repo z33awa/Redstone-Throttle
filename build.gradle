@@ -1,0 +1,90 @@
+plugins {
+    id("idea")
+    id("net.neoforged.moddev") version "2.0.141"
+}
+
+group = "com.example.aerothrottle"
+version = mod_version
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+neoForge {
+    version = neo_version
+
+    if (parchment_version != "none") {
+        parchment {
+            minecraftVersion = parchment_minecraft_version
+            mappingsVersion = parchment_version
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+
+    runs {
+        configureEach {
+            systemProperty("forge.logging.markers", "REGISTRIES")
+            systemProperty("neoforge.enabledGameTestNamespaces", mod_id as String)
+        }
+
+        client {
+            client()
+        }
+
+        server {
+            server()
+            gameDirectory = project.file("run/server")
+            programArgument("--nogui")
+        }
+    }
+}
+
+repositories {
+    maven { url = "https://maven.createmod.net" }              // Create, Ponder, Flywheel
+    maven { url = "https://maven.ithundxr.dev/snapshots" }     // Registrate
+}
+
+dependencies {
+    implementation("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") {
+        transitive = false
+    }
+    implementation("net.createmod.ponder:ponder-neoforge:${ponder_version}+mc${minecraft_version}")
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
+    runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
+    implementation("com.tterrag.registrate:Registrate:${registrate_version}")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+        "mod_version"           : mod_version,
+        "mod_id"                : mod_id,
+        "mod_name"              : mod_name,
+        "mod_author"            : mod_author,
+        "mod_description"       : mod_description,
+        "mod_license"           : mod_license,
+        "neo_version"           : neo_version,
+        "minecraft_version"     : minecraft_version,
+        "create_version"        : create_version,
+        "create_min_version"    : create_min_version,
+        "flywheel_version_range": flywheel_version_range,
+        "ponder_version"        : ponder_version,
+    ]
+    inputs.properties(replaceProperties)
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand(replaceProperties)
+    }
+}

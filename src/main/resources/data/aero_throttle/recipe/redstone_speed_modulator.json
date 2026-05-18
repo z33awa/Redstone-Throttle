@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RBR",
+    "CMC",
+    "RBR"
+  ],
+  "key": {
+    "R": { "item": "minecraft:redstone" },
+    "B": { "item": "create:brass_ingot" },
+    "C": { "item": "create:cogwheel" },
+    "M": { "item": "create:precision_mechanism" }
+  },
+  "result": {
+    "id": "aero_throttle:redstone_speed_modulator",
+    "count": 1
+  }
+}

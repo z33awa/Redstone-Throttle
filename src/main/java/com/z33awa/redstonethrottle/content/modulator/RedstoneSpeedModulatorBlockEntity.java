@@ -152,12 +152,13 @@ public class RedstoneSpeedModulatorBlockEntity extends GeneratingKineticBlockEnt
 
     /** Read the speed of the kinetic block adjacent to the BACK face. Safe for client-side use (renderer). */
     public float readInputSpeed() {
+        if (level == null) return 0f;
         Direction facing = getBlockState().getValue(RedstoneSpeedModulatorBlock.FACING);
         return readInputSpeed(facing, false);
     }
 
     private float readInputSpeed(Direction facing, boolean theoretical) {
-        if (level == null || facing == null || getBlockState() == null) return 0f;
+        if (level == null) return 0f;
         BlockEntity be = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
         if (!(be instanceof KineticBlockEntity kbe)) return 0f;
         BlockState sourceState = kbe.getBlockState();

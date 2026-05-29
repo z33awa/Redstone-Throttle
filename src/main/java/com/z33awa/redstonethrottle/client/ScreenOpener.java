@@ -19,14 +19,8 @@ public class ScreenOpener {
             return;
         }
 
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft == null) {
-            RedstoneThrottleMod.LOGGER.warn("Ignored screen open request for {}: Minecraft instance unavailable", be.getBlockPos());
-            return;
-        }
-
         try {
-            minecraft.setScreen(new ModulatorScreen(be));
+            Minecraft.getInstance().setScreen(new ModulatorScreen(be));
         } catch (RuntimeException e) {
             RedstoneThrottleMod.LOGGER.error("Failed to open modulator screen at {}", be.getBlockPos(), e);
         }

@@ -1,5 +1,6 @@
 package com.z33awa.redstonethrottle.client;
 
+import com.z33awa.redstonethrottle.RedstoneThrottleMod;
 import com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity;
 
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,21 @@ import net.neoforged.fml.loading.FMLEnvironment;
 public class ScreenOpener {
     public static void openModulatorScreen(RedstoneSpeedModulatorBlockEntity be) {
         if (FMLEnvironment.dist != Dist.CLIENT) return;
-        Minecraft.getInstance().setScreen(new ModulatorScreen(be));
+        if (be == null) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored screen open request: modulator block entity was null");
+            return;
+        }
+
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft == null) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored screen open request for {}: Minecraft instance unavailable", be.getBlockPos());
+            return;
+        }
+
+        try {
+            minecraft.setScreen(new ModulatorScreen(be));
+        } catch (RuntimeException e) {
+            RedstoneThrottleMod.LOGGER.error("Failed to open modulator screen at {}", be.getBlockPos(), e);
+        }
     }
 }

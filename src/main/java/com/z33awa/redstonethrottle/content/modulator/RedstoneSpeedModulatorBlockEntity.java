@@ -15,7 +15,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -148,27 +147,23 @@ public class RedstoneSpeedModulatorBlockEntity extends GeneratingKineticBlockEnt
     }
 
     private float readInputSpeed(Direction facing) {
-         BlockEntity be = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
-        if (!(be instanceof KineticBlockEntity kbe))
-            return 0f;
-        Block block = kbe.getBlockState().getBlock();
-        if (!(block instanceof IRotate rotate))
-            return 0f;
-        if (rotate.getRotationAxis(kbe.getBlockState()) != facing.getAxis())
-            return 0f;
-        return kbe.getTheoreticalSpeed();
+        return readInputSpeed(facing, true);
     }
 
     /** Read the speed of the kinetic block adjacent to the BACK face. Safe for client-side use (renderer). */
     public float readInputSpeed() {
-        if (level == null) return 0f;
         Direction facing = getBlockState().getValue(RedstoneSpeedModulatorBlock.FACING);
+        return readInputSpeed(facing, false);
+    }
+
+    private float readInputSpeed(Direction facing, boolean theoretical) {
+        if (level == null || facing == null || getBlockState() == null) return 0f;
         BlockEntity be = level.getBlockEntity(worldPosition.relative(facing.getOpposite()));
         if (!(be instanceof KineticBlockEntity kbe)) return 0f;
-        Block block = kbe.getBlockState().getBlock();
-        if (!(block instanceof IRotate rotate)) return 0f;
-        if (rotate.getRotationAxis(kbe.getBlockState()) != facing.getAxis()) return 0f;
-        return kbe.getSpeed();
+        BlockState sourceState = kbe.getBlockState();
+        if (!(sourceState.getBlock() instanceof IRotate rotate)) return 0f;
+        if (rotate.getRotationAxis(sourceState) != facing.getAxis()) return 0f;
+        return theoretical ? kbe.getTheoreticalSpeed() : kbe.getSpeed();
     }
 
     @Override
@@ -204,11 +199,14 @@ public class RedstoneSpeedModulatorBlockEntity extends GeneratingKineticBlockEnt
     protected void read(CompoundTag tag, HolderLookup.Provider registries, boolean clientPacket) {
         mode = Mode.of(tag.getByte("Mode"));
         lockedRate = Mth.clamp(tag.getInt("LockedRate"), MIN_RATE, MAX_RATE);
+        // Backward compatibility: old worlds may miss this tag and decode as 0.
         if (lockedRate == 0) lockedRate = 16;
         strengthMultiplier = Mth.clamp(tag.getInt("StrengthMultiplier"), MIN_MULTIPLIER, MAX_MULTIPLIER);
+        // Backward compatibility: old worlds may miss this tag and decode as 0.
         if (strengthMultiplier == 0) strengthMultiplier = 16;
         initialSpeed = Mth.clamp(tag.getInt("InitialSpeed"), MIN_INITIAL_SPEED, MAX_INITIAL_SPEED);
         intervalTicks = Mth.clamp(tag.getInt("IntervalTicks"), MIN_INTERVAL_TICKS, MAX_INTERVAL_TICKS);
+        // Backward compatibility: old worlds may miss this tag and decode as 0.
         if (intervalTicks == 0) intervalTicks = 20;
         offset = tag.getFloat("Offset");
         cachedGenerated = tag.getFloat("Generated");
@@ -252,8 +250,7 @@ public class RedstoneSpeedModulatorBlockEntity extends GeneratingKineticBlockEnt
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        added = true;
+        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
         tooltip.add(Component.literal(" ")
             .append(Component.translatable("gui.goggles.redstone_throttle.output"))
@@ -293,6 +290,6 @@ public class RedstoneSpeedModulatorBlockEntity extends GeneratingKineticBlockEnt
                     String.format("%.2f", intervalTicks / 20.0f)).withStyle(ChatFormatting.DARK_GRAY)));
         }
 
-        return added;
+        return true;
     }
 }

@@ -1,37 +1,35 @@
 package com.z33awa.redstonethrottle.client;
 
-import com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity;
-import com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity.Mode;
-import com.z33awa.redstonethrottle.network.UpdateModulatorPacket;
-import com.mojang.blaze3d.platform.Lighting;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-
-import com.z33awa.redstonethrottle.registry.ModBlocks;
-
-import net.minecraft.world.item.ItemStack;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.List;
-import java.util.Optional;
+import com.z33awa.redstonethrottle.RedstoneThrottleMod;
+import com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity;
+import com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity.Mode;
+import com.z33awa.redstonethrottle.network.UpdateModulatorPacket;
+import com.z33awa.redstonethrottle.registry.ModBlocks;
 
 import static com.z33awa.redstonethrottle.content.modulator.RedstoneSpeedModulatorBlockEntity.*;
 
@@ -55,59 +53,29 @@ public class ModulatorScreen extends Screen {
     private static final int ART_W = 174;   // artwork width
     private static final int ART_H = 116;   // artwork height
 
-    // ── Overall scale & position ──────────────────────────────────
-    private static final float UI_SCALE   = 1.0f;  // 1.0=原大小, 越大越放大
-    private static final int   LEFT_SHIFT = 0;    // px 左移（0=居中）
+    private static final int WIDTH = ART_W;
+    private static final int HEIGHT = ART_H;
 
-    private static final int WIDTH  = (int)(ART_W * UI_SCALE);
-    private static final int HEIGHT = (int)(ART_H * UI_SCALE);
-
-    // ═══════════════════════════════════════════════════════════════
-    //  POSITION TWEAKS  (original unscaled px, auto-multiplied by UI_SCALE)
-    // ═══════════════════════════════════════════════════════════════
-    private static final int _TITLE_Y = 3;
-    private static final int _TITLE_X = -4;    // X offset from centre
-    private static final int _MODE_Y  = 25;
-    private static final int _MODE_X  = -4;    // X offset from centre
-    private static final int _TAB_Y   = 22;
-    private static final int _TAB_W   = 50;
-    private static final int _TAB_H   = 16;
-    private static final int _LABEL_X  = 40;
-    private static final int _VALUE_CX = 25;
-    private static final int _FIXED_RATE_Y   = 47;
-    private static final int _FIXED_INTERVAL_Y = 69;
-    private static final int _STRENGTH_INTERVAL_Y = 47;
-    private static final int _MULT_INITIAL_Y    = 47;
-    private static final int _MULT_MULTIPLIER_Y = 69;
-    private static final int _CONFIRM_X    = 141;
-    private static final int _CONFIRM_Y    = 93;
-    private static final int _CONFIRM_SIZE = 16;
-    private static final int _PREVIEW_X    = 180;
-    private static final int _PREVIEW_Y    = 62;
-    private static final int _PREVIEW_SIZE = 80;
-
-    // Scaled values (used in code)
-    private static final int TITLE_Y = s(_TITLE_Y);
-    private static final int TITLE_X = s(_TITLE_X);
-    private static final int MODE_Y  = s(_MODE_Y);
-    private static final int MODE_X  = s(_MODE_X);
-    private static final int TAB_Y   = s(_TAB_Y);
-    private static final int TAB_WIDTH  = s(_TAB_W);
-    private static final int TAB_HEIGHT = s(_TAB_H);
-    private static final int LABEL_X  = s(_LABEL_X);
-    private static final int VALUE_CENTER_X_OFFSET = s(_VALUE_CX);
-    private static final int FIXED_RATE_Y     = s(_FIXED_RATE_Y);
-    private static final int FIXED_INTERVAL_Y = s(_FIXED_INTERVAL_Y);
-    private static final int STRENGTH_INTERVAL_Y = s(_STRENGTH_INTERVAL_Y);
-    private static final int MULT_INITIAL_Y   = s(_MULT_INITIAL_Y);
-    private static final int MULT_MULTIPLIER_Y = s(_MULT_MULTIPLIER_Y);
-    private static final int CONFIRM_X    = s(_CONFIRM_X);
-    private static final int CONFIRM_Y    = s(_CONFIRM_Y);
-    private static final int CONFIRM_SIZE = s(_CONFIRM_SIZE);
-    private static final int PREVIEW_X    = s(_PREVIEW_X);
-    private static final int PREVIEW_Y    = s(_PREVIEW_Y);
-    private static final int PREVIEW_SIZE = s(_PREVIEW_SIZE);
-    private static int s(int v) { return (int)(v * UI_SCALE); }
+    private static final int TITLE_Y = 3;
+    private static final int TITLE_X = -4;
+    private static final int MODE_Y = 25;
+    private static final int MODE_X = -4;
+    private static final int TAB_Y = 22;
+    private static final int TAB_WIDTH = 50;
+    private static final int TAB_HEIGHT = 16;
+    private static final int LABEL_X = 40;
+    private static final int VALUE_CENTER_X_OFFSET = 25;
+    private static final int FIXED_RATE_Y = 47;
+    private static final int FIXED_INTERVAL_Y = 69;
+    private static final int STRENGTH_INTERVAL_Y = 47;
+    private static final int MULT_INITIAL_Y = 47;
+    private static final int MULT_MULTIPLIER_Y = 69;
+    private static final int CONFIRM_X = 141;
+    private static final int CONFIRM_Y = 93;
+    private static final int CONFIRM_SIZE = 16;
+    private static final int PREVIEW_X = 180;
+    private static final int PREVIEW_Y = 62;
+    private static final int PREVIEW_SIZE = 80;
 
     // ---- Screen dim ----
     private static final int SCREEN_DIM_TOP = 0x40_101010;
@@ -156,7 +124,7 @@ public class ModulatorScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        this.guiLeft = (this.width  - WIDTH)  / 2 - LEFT_SHIFT;
+        this.guiLeft = (this.width - WIDTH) / 2;
         this.guiTop  = (this.height - HEIGHT) / 2;
         clearWidgets();
         createConfirmButton();
@@ -182,8 +150,8 @@ public class ModulatorScreen extends Screen {
                 guiLeft + WIDTH / 2 + TITLE_X, guiTop + TITLE_Y, COLOR_TITLE);
 
         Component modeText = Component.translatable(
-                "gui.redstone_throttle.mode." + mode.name().toLowerCase(java.util.Locale.ROOT));
-                guiLeft + WIDTH / 2 + MODE_X, guiTop + MODE_Y, COLOR_MODE);
+                "gui.redstone_throttle.mode." + mode.name().toLowerCase(Locale.ROOT));
+        g.drawCenteredString(font, modeText, guiLeft + WIDTH / 2 + MODE_X, guiTop + MODE_Y, COLOR_MODE);
 
         drawValueLabels(g);
         renderBlockPreview(g);
@@ -233,18 +201,25 @@ public class ModulatorScreen extends Screen {
     }
 
     private void renderBlockPreview(GuiGraphics g) {
-        ItemStack stack = new ItemStack(ModBlocks.REDSTONE_SPEED_MODULATOR.get().asItem());
         g.pose().pushPose();
-        g.pose().translate(guiLeft + PREVIEW_X, guiTop + PREVIEW_Y, 0);
-        float s = PREVIEW_SIZE / 16f;
-        g.pose().scale(s, s, 1f);
-        Lighting.setupForFlatItems();
-        g.renderItem(stack, 0, 0, 0);
-        g.pose().popPose();
+        try {
+            ItemStack stack = new ItemStack(ModBlocks.REDSTONE_SPEED_MODULATOR.get().asItem());
+            g.pose().translate(guiLeft + PREVIEW_X, guiTop + PREVIEW_Y, 0);
+            float scale = PREVIEW_SIZE / 16f;
+            g.pose().scale(scale, scale, 1f);
+            Lighting.setupForFlatItems();
+            g.renderItem(stack, 0, 0, 0);
+        } catch (RuntimeException e) {
+            RedstoneThrottleMod.LOGGER.warn("Failed to render modulator preview at {}", pos, e);
+        } finally {
+            g.pose().popPose();
+        }
     }
 
     // ── Vanilla tooltip ───────────────────────────────────────────
-        Component t = Component.translatable("gui.redstone_throttle.mode." + mode.name().toLowerCase(java.util.Locale.ROOT));
+    private boolean isOverModeBox(double mouseX, double mouseY) {
+        Component t = Component.translatable("gui.redstone_throttle.mode." + mode.name().toLowerCase(Locale.ROOT));
+        int tw = font.width(t);
         int x = guiLeft + WIDTH / 2 + MODE_X - tw / 2;
         int y = guiTop + MODE_Y;
         return mouseX >= x && mouseX <= x + tw && mouseY >= y && mouseY <= y + font.lineHeight;

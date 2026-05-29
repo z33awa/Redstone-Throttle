@@ -35,9 +35,17 @@ public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int
     }
 
     public static void handle(UpdateModulatorPacket pkt, IPayloadContext ctx) {
+        if (pkt == null || ctx == null) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet: packet/context was null");
+            return;
+        }
+
         ctx.enqueueWork(() -> applySettings(pkt, ctx))
             .exceptionally(throwable -> {
-                RedstoneThrottleMod.LOGGER.warn("Unexpected exception while processing modulator update packet at {}", pkt == null ? "null" : pkt.pos(), throwable);
+                RedstoneThrottleMod.LOGGER.error(
+                    "Failed to process modulator update packet at {}",
+                    pkt.pos(),
+                    throwable);
                 return null;
             });
     }
@@ -48,8 +56,14 @@ public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int
             return;
         }
 
-        if (!(ctx.player().level() instanceof Level level)) {
-            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet: invalid level for {}", ctx.player().getName().getString());
+        if (ctx.player() == null) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet at {}: missing player context", pkt.pos());
+            return;
+        }
+        var player = ctx.player();
+
+        if (!(player.level() instanceof Level level)) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet at {}: invalid player level for {}", pkt.pos(), player.getName().getString());
             return;
         }
 
@@ -65,8 +79,8 @@ public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int
         }
 
         // Distance check: 8 blocks
-        if (ctx.player().distanceToSqr(pkt.pos().getX() + 0.5, pkt.pos().getY() + 0.5, pkt.pos().getZ() + 0.5) > 64) {
-            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet: player {} too far from {}", ctx.player().getName().getString(), pkt.pos());
+        if (player.distanceToSqr(pkt.pos().getX() + 0.5, pkt.pos().getY() + 0.5, pkt.pos().getZ() + 0.5) > 64) {
+            RedstoneThrottleMod.LOGGER.warn("Ignored modulator update packet: player {} too far from {}", player.getName().getString(), pkt.pos());
             return;
         }
 

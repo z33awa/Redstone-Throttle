@@ -21,7 +21,7 @@
   "gui.goggles.redstone_throttle.initial_speed": "base",
   "gui.goggles.redstone_throttle.multiplier": "strength mul",
   "gui.goggles.redstone_throttle.interval": "Step interval: %ss",
-  "tooltip.redstone_throttle.redstone_speed_modulator.summary": "Transforms input rotation by an offset accumulated from redstone signals. Shift + Right-click to configure.",
+  "tooltip.redstone_throttle.redstone_speed_modulator.summary": "Transforms input rotation by an offset accumulated from redstone signals. Right-click to configure.",
   "gui.redstone_throttle.tooltip.scroll": "Scroll to Adjust",
   "gui.redstone_throttle.tooltip.shift": "Hold Shift for ×10",
   "gui.redstone_throttle.tooltip.switch_mode": "Scroll to Switch"

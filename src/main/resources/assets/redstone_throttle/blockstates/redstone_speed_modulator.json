@@ -4,7 +4,7 @@
     "facing=east":  { "model": "redstone_throttle:block/redstone_speed_modulator", "y": 90 },
     "facing=south": { "model": "redstone_throttle:block/redstone_speed_modulator", "y": 180 },
     "facing=west":  { "model": "redstone_throttle:block/redstone_speed_modulator", "y": 270 },
-    "facing=up":    { "model": "redstone_throttle:block/redstone_speed_modulator", "x": 90, "y": 180 },
-    "facing=down":  { "model": "redstone_throttle:block/redstone_speed_modulator", "x": 270, "y": 180 }
+    "facing=up":    { "model": "redstone_throttle:block/redstone_speed_modulator", "x": 90 },
+    "facing=down":  { "model": "redstone_throttle:block/redstone_speed_modulator", "x": 270 }
   }
 }

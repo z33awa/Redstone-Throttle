@@ -2,10 +2,11 @@
   "credit": "Geometry based on Create's encased_chain_drive/single with split slots and added shaft stubs.",
   "parent": "block/block",
   "textures": {
-    "1": "create:block/gearbox",
-    "particle": "create:block/encased_chain_drive",
-    "side_redstone": "create:block/adjustable_chain_gearshift",
-    "side_chain": "create:block/encased_chain_drive",
+    "1": "aero_throttle:block/redstone_speed_modulator_1",
+    "particle": "aero_throttle:block/redstone_speed_modulator_2",
+    "side_redstone_east": "aero_throttle:block/redstone_speed_modulator_3",
+    "side_redstone_west": "aero_throttle:block/redstone_speed_modulator_4",
+    "side_chain": "aero_throttle:block/redstone_speed_modulator_2",
     "axis": "create:block/axis",
     "axis_top": "create:block/axis_top"
   },
@@ -17,9 +18,9 @@
       "to": [16, 2, 16],
       "faces": {
         "north": {"uv": [0, 14, 16, 16], "texture": "#1"},
-        "east":  {"uv": [14, 0, 16, 16], "rotation": 90,  "texture": "#side_redstone"},
+        "east":  {"uv": [14, 0, 16, 16], "rotation": 90,  "texture": "#side_redstone_east"},
         "south": {"uv": [0, 14, 16, 16], "texture": "#1"},
-        "west":  {"uv": [0, 0, 2, 16],   "rotation": 270, "texture": "#side_redstone"},
+        "west":  {"uv": [0, 0, 2, 16],   "rotation": 270, "texture": "#side_redstone_west"},
         "up":    {"uv": [0, 0, 16, 16],                  "texture": "#side_chain"},
         "down":  {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#side_chain"}
       }
@@ -39,9 +40,9 @@
       "to": [16, 16, 16],
       "faces": {
         "north": {"uv": [0, 0, 16, 2], "texture": "#1"},
-        "east":  {"uv": [0, 0, 2, 16],  "rotation": 90,  "texture": "#side_redstone"},
+        "east":  {"uv": [0, 0, 2, 16],  "rotation": 90,  "texture": "#side_redstone_east"},
         "south": {"uv": [0, 0, 16, 2], "texture": "#1"},
-        "west":  {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#side_redstone"},
+        "west":  {"uv": [14, 0, 16, 16], "rotation": 270, "texture": "#side_redstone_west"},
         "up":    {"uv": [0, 0, 16, 16], "texture": "#side_chain"},
         "down":  {"uv": [0, 0, 16, 16], "texture": "#side_chain"}
       }
@@ -52,9 +53,9 @@
       "to": [2, 14, 16],
       "faces": {
         "north": {"uv": [14, 2, 16, 14], "texture": "#1"},
-        "east":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone"},
+        "east":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone_east"},
         "south": {"uv": [0, 2, 2, 14],  "texture": "#1"},
-        "west":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone"}
+        "west":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone_west"}
       }
     },
     {
@@ -63,9 +64,9 @@
       "to": [16, 14, 16],
       "faces": {
         "north": {"uv": [0, 2, 2, 14],   "texture": "#1"},
-        "east":  {"uv": [2, 0, 14, 16], "rotation": 90,  "texture": "#side_redstone"},
+        "east":  {"uv": [2, 0, 14, 16], "rotation": 90,  "texture": "#side_redstone_east"},
         "south": {"uv": [14, 2, 16, 14], "texture": "#1"},
-        "west":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone"}
+        "west":  {"uv": [2, 0, 14, 16], "rotation": 270, "texture": "#side_redstone_west"}
       }
     }
   ]

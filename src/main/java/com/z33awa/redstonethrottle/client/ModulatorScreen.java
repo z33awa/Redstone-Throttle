@@ -183,6 +183,7 @@ public class ModulatorScreen extends Screen {
 
         Component modeText = Component.translatable(
                 "gui.redstone_throttle.mode." + mode.name().toLowerCase(java.util.Locale.ROOT));
+        g.drawCenteredString(font, modeText,
                 guiLeft + WIDTH / 2 + MODE_X, guiTop + MODE_Y, COLOR_MODE);
 
         drawValueLabels(g);
@@ -243,8 +244,9 @@ public class ModulatorScreen extends Screen {
         g.pose().popPose();
     }
 
-    // ── Vanilla tooltip ───────────────────────────────────────────
+    private boolean isOverModeBox(double mouseX, double mouseY) {
         Component t = Component.translatable("gui.redstone_throttle.mode." + mode.name().toLowerCase(java.util.Locale.ROOT));
+        int tw = font.width(t);
         int x = guiLeft + WIDTH / 2 + MODE_X - tw / 2;
         int y = guiTop + MODE_Y;
         return mouseX >= x && mouseX <= x + tw && mouseY >= y && mouseY <= y + font.lineHeight;

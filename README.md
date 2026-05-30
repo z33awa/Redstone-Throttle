@@ -1,4 +1,4 @@
-# Create:Redstone Throttle
+# Aeronautic Throttle
 
 > 为 **Create** / **Create: Aeronautics** 设计的红石转速调节附属模组。
 
@@ -49,7 +49,7 @@
 
 ### 使用
 
-1. **合成**：4×红石 + 1×黄铜锭 + 2×齿轮 + 1×精密机械 + 1×黄铜机壳
+1. **合成**：4×红石 + 2×黄铜锭 + 2×齿轮 + 1×精密机械
 2. **放置**：方块前后两面会自动对齐到附近的动力轴方向
 3. **接入**：输入动力接到方块**背面**，输出从**前面**接出
 4. **红石控制**：
@@ -73,14 +73,18 @@
 ### 从源码构建
 
 ```bash
-git clone https://github.com/z33awa/Redstone-Throttle.git
-cd Redstone-Throttle
+git clone https://github.com/z33awa/Aeronautic-Throttle.git
+cd AeroThrottle
 ./gradlew build
 ```
 
-产物路径：`build/libs/redstone_throttle-1.21.1-<version>.jar`
+产物路径：`build/libs/aero_throttle-1.21.1-<version>.jar`
 
 需要 Java 21。
+
+### 已知问题 / 待办
+
+- 在某些 Iris shader 组合下可能闪烁
 
 ### 致谢
 

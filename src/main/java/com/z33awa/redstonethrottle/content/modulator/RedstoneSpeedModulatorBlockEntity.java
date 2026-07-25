@@ -31,12 +31,15 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
     public static final int MIN_RATE = 1;
     public static final int MAX_MULTIPLIER = 256;
     public static final int MIN_MULTIPLIER = 1;
+    public static final int MAX_INITIAL_SPEED = 256;
+    public static final int MIN_INITIAL_SPEED = 0;
     public static final int MAX_INTERVAL_TICKS = 200;
     public static final int MIN_INTERVAL_TICKS = 10;
 
     private Mode mode = Mode.STRENGTH;
     private int lockedRate = 16;
     private int strengthMultiplier = 16;
+    private int initialSpeed;
     private int intervalTicks = 20;
 
     private int tickCounter;
@@ -84,7 +87,7 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
         float desired;
 
         if (mode == Mode.MULTIPLIER) {
-            float targetAbs = inputAbs + signalDifference * (float) strengthMultiplier;
+            float targetAbs = initialSpeed + signalDifference * (float) strengthMultiplier;
             desired = inputSign * Mth.clamp(targetAbs, 0f, maxSpeed);
         } else {
             int interval = Math.max(MIN_INTERVAL_TICKS, intervalTicks);
@@ -182,6 +185,7 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
         tag.putByte("Mode", (byte) mode.ordinal());
         tag.putInt("LockedRate", lockedRate);
         tag.putInt("StrengthMultiplier", strengthMultiplier);
+        tag.putInt("InitialSpeed", initialSpeed);
         tag.putInt("IntervalTicks", intervalTicks);
         tag.putFloat("Offset", offset);
         tag.putFloat("OutputSpeed", outputSpeed);
@@ -195,6 +199,8 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
             ? Mth.clamp(tag.getInt("LockedRate"), MIN_RATE, MAX_RATE) : 16;
         strengthMultiplier = tag.contains("StrengthMultiplier")
             ? Mth.clamp(tag.getInt("StrengthMultiplier"), MIN_MULTIPLIER, MAX_MULTIPLIER) : 16;
+        initialSpeed = tag.contains("InitialSpeed")
+            ? Mth.clamp(tag.getInt("InitialSpeed"), MIN_INITIAL_SPEED, MAX_INITIAL_SPEED) : 0;
         intervalTicks = tag.contains("IntervalTicks")
             ? Mth.clamp(tag.getInt("IntervalTicks"), MIN_INTERVAL_TICKS, MAX_INTERVAL_TICKS) : 20;
         offset = tag.getFloat("Offset");
@@ -214,6 +220,10 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
         return strengthMultiplier;
     }
 
+    public int getInitialSpeed() {
+        return initialSpeed;
+    }
+
     public int getIntervalTicks() {
         return intervalTicks;
     }
@@ -222,10 +232,12 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
         return offset;
     }
 
-    public void applySettings(Mode mode, int lockedRate, int intervalTicks, int strengthMultiplier) {
+    public void applySettings(Mode mode, int lockedRate, int intervalTicks, int strengthMultiplier,
+                              int initialSpeed) {
         this.mode = mode;
         this.lockedRate = Mth.clamp(lockedRate, MIN_RATE, MAX_RATE);
         this.strengthMultiplier = Mth.clamp(strengthMultiplier, MIN_MULTIPLIER, MAX_MULTIPLIER);
+        this.initialSpeed = Mth.clamp(initialSpeed, MIN_INITIAL_SPEED, MAX_INITIAL_SPEED);
         this.intervalTicks = Mth.clamp(intervalTicks, MIN_INTERVAL_TICKS, MAX_INTERVAL_TICKS);
         tickCounter = this.intervalTicks;
         setChanged();
@@ -259,6 +271,11 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
                 .append(Component.translatable("gui.goggles.redstone_throttle.rpm_per_step")
                     .withStyle(ChatFormatting.DARK_GRAY)));
         } else if (mode == Mode.MULTIPLIER) {
+            tooltip.add(Component.literal("    ")
+                .append(Component.literal(initialSpeed + " RPM").withStyle(ChatFormatting.AQUA))
+                .append(Component.literal(" "
+                    + Component.translatable("gui.goggles.redstone_throttle.initial_speed").getString())
+                    .withStyle(ChatFormatting.DARK_GRAY)));
             tooltip.add(Component.literal("    ")
                 .append(Component.literal(strengthMultiplier + " ×").withStyle(ChatFormatting.AQUA))
                 .append(Component.literal(" "

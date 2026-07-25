@@ -77,7 +77,8 @@ public class ModulatorScreen extends Screen {
     private static final int _FIXED_RATE_Y   = 47;
     private static final int _FIXED_INTERVAL_Y = 69;
     private static final int _STRENGTH_INTERVAL_Y = 47;
-    private static final int _MULT_MULTIPLIER_Y = 47;
+    private static final int _MULT_INITIAL_Y    = 47;
+    private static final int _MULT_MULTIPLIER_Y = 69;
     private static final int _CONFIRM_X    = 141;
     private static final int _CONFIRM_Y    = 93;
     private static final int _CONFIRM_SIZE = 16;
@@ -98,6 +99,7 @@ public class ModulatorScreen extends Screen {
     private static final int FIXED_RATE_Y     = s(_FIXED_RATE_Y);
     private static final int FIXED_INTERVAL_Y = s(_FIXED_INTERVAL_Y);
     private static final int STRENGTH_INTERVAL_Y = s(_STRENGTH_INTERVAL_Y);
+    private static final int MULT_INITIAL_Y   = s(_MULT_INITIAL_Y);
     private static final int MULT_MULTIPLIER_Y = s(_MULT_MULTIPLIER_Y);
     private static final int CONFIRM_X    = s(_CONFIRM_X);
     private static final int CONFIRM_Y    = s(_CONFIRM_Y);
@@ -128,6 +130,7 @@ public class ModulatorScreen extends Screen {
     private Mode mode;
     private int lockedRate;
     private int strengthMultiplier;
+    private int initialSpeed;
     private int intervalTicks;
 
     private int guiLeft;
@@ -143,6 +146,7 @@ public class ModulatorScreen extends Screen {
         this.mode              = be.getMode();
         this.lockedRate        = be.getLockedRate();
         this.strengthMultiplier = be.getStrengthMultiplier();
+        this.initialSpeed       = be.getInitialSpeed();
         this.intervalTicks      = be.getIntervalTicks();
     }
 
@@ -216,6 +220,11 @@ public class ModulatorScreen extends Screen {
                         valCenterX, guiTop + STRENGTH_INTERVAL_Y, COLOR_VALUE);
             }
             case MULTIPLIER -> {
+                g.drawString(font, Component.translatable("gui.redstone_throttle.initial_speed"),
+                        labelX, guiTop + MULT_INITIAL_Y, COLOR_LABEL);
+                g.drawCenteredString(font, initialSpeed + " RPM",
+                        valCenterX, guiTop + MULT_INITIAL_Y, COLOR_VALUE);
+
                 g.drawString(font, Component.translatable("gui.redstone_throttle.multiplier"),
                         labelX, guiTop + MULT_MULTIPLIER_Y, COLOR_LABEL);
                 g.drawCenteredString(font, strengthMultiplier + " ×",
@@ -273,6 +282,7 @@ public class ModulatorScreen extends Screen {
             case STRENGTH ->
                 inRow(mouseY, STRENGTH_INTERVAL_Y) ? "gui.redstone_throttle.interval" : null;
             case MULTIPLIER -> {
+                if (inRow(mouseY, MULT_INITIAL_Y)) yield "gui.redstone_throttle.initial_speed";
                 if (inRow(mouseY, MULT_MULTIPLIER_Y)) yield "gui.redstone_throttle.multiplier";
                 yield null;
             }
@@ -326,6 +336,10 @@ public class ModulatorScreen extends Screen {
                 }
             }
             case MULTIPLIER -> {
+                if (inRow(mouseY, MULT_INITIAL_Y)) {
+                    initialSpeed = Mth.clamp(initialSpeed + delta, MIN_INITIAL_SPEED, MAX_INITIAL_SPEED);
+                    return true;
+                }
                 if (inRow(mouseY, MULT_MULTIPLIER_Y)) {
                     strengthMultiplier = Mth.clamp(strengthMultiplier + delta, MIN_MULTIPLIER, MAX_MULTIPLIER);
                     return true;
@@ -358,7 +372,7 @@ public class ModulatorScreen extends Screen {
 
     private void sendUpdate() {
         PacketDistributor.sendToServer(new UpdateModulatorPacket(
-                pos, (byte) mode.ordinal(), lockedRate, intervalTicks, strengthMultiplier));
+                pos, (byte) mode.ordinal(), lockedRate, intervalTicks, strengthMultiplier, initialSpeed));
     }
 
     @Override

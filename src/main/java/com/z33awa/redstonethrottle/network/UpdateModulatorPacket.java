@@ -13,7 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int intervalTicks, int strengthMultiplier)
+public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int intervalTicks,
+                                    int strengthMultiplier, int initialSpeed)
     implements CustomPacketPayload {
 
     public static final Type<UpdateModulatorPacket> TYPE = new Type<>(
@@ -26,6 +27,7 @@ public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int
             ByteBufCodecs.VAR_INT, UpdateModulatorPacket::lockedRate,
             ByteBufCodecs.VAR_INT, UpdateModulatorPacket::intervalTicks,
             ByteBufCodecs.VAR_INT, UpdateModulatorPacket::strengthMultiplier,
+            ByteBufCodecs.VAR_INT, UpdateModulatorPacket::initialSpeed,
             UpdateModulatorPacket::new);
 
     @Override
@@ -79,6 +81,7 @@ public record UpdateModulatorPacket(BlockPos pos, byte mode, int lockedRate, int
             RedstoneSpeedModulatorBlockEntity.Mode.of(pkt.mode()),
             pkt.lockedRate(),
             pkt.intervalTicks(),
-            pkt.strengthMultiplier());
+            pkt.strengthMultiplier(),
+            pkt.initialSpeed());
     }
 }

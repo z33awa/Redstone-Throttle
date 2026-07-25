@@ -1,95 +1,158 @@
-# Redstone Throttle
+# Create: Redstone Throttle
 
-> 为 **Create** / **Create: Aeronautics** 设计的红石转速调节附属模组。
+![Create: Redstone Throttle](src/main/resources/icon.png)
+
+[![Minecraft 1.21.1](https://img.shields.io/badge/Minecraft-1.21.1-62B47A)](https://www.minecraft.net/)
+[![NeoForge](https://img.shields.io/badge/Loader-NeoForge-EF7B45)](https://neoforged.net/)
+[![Create 6.0.10+](https://img.shields.io/badge/Create-6.0.10%2B-CDB894)](https://www.curseforge.com/minecraft/mc-mods/create)
+[![CurseForge](https://img.shields.io/badge/Download-CurseForge-F16436)](https://www.curseforge.com/minecraft/mc-mods/redstone-throttle)
+[![Modrinth](https://img.shields.io/badge/Download-Modrinth-00AF5C)](https://modrinth.com/mod/createredstone-throttle)
+
+A compact kinetic controller for the Create mod. Use redstone signals to adjust an
+existing rotation without replacing your entire transmission.
+
+English · [简体中文](#简体中文)
+
+## Features
+
+- Six-axis placement with dedicated kinetic input and output faces.
+- Two rotatable redstone control faces: red increases speed and blue decreases it.
+- Three control modes for different automation needs.
+- Adjustable update interval from 10 to 200 ticks (0.5–10 seconds).
+- Stress and overstress behavior integrated with Create's kinetic network.
+- Goggle tooltips for live input, output, mode, and configuration values.
+- Optional compatibility with Create Aeronautics.
+
+The arrow on the side points from the kinetic input toward the output. The red and
+blue control faces can receive independent redstone signals.
+
+## Control modes
+
+### Follow signal strength
+
+The output speed is derived from the difference between the red and blue signals.
+This is the simplest mode for proportional redstone control.
+
+### Fixed speed
+
+The block outputs a configured target speed while it has a valid kinetic input.
+
+### Signal strength × multiplier
+
+The output speed is calculated as:
+
+```text
+output speed = initial speed + (red signal - blue signal) × multiplier
+```
+
+Initial speed can be configured from 0 to 256 RPM. Rotation direction follows the
+kinetic input, and the output becomes zero when no valid input is available.
+
+## Requirements
+
+- Minecraft 1.21.1
+- NeoForge 21.1.219 or newer
+- Create 6.0.10 or newer
+
+Create Aeronautics is optional. Install the mod on both the client and the server.
+
+## Installation
+
+1. Install NeoForge for Minecraft 1.21.1.
+2. Install Create 6.0.10 or newer.
+3. Put the Redstone Throttle jar in the `mods` folder on both client and server.
+4. Optionally install Create Aeronautics.
+
+## Usage
+
+1. Connect Create power to the input face and your machinery to the output face.
+2. Feed redstone signals into the red and blue control faces.
+3. Hold Shift and right-click the block to open its configuration screen.
+4. Scroll over a value to adjust it; hold Shift while scrolling for ×10 steps.
+5. Use a wrench on a shaft end to rotate the redstone control faces around the
+   transmission axis.
+
+## Building from source
+
+This project uses the Gradle wrapper and Java 21:
+
+```powershell
+.\gradlew.bat build
+```
+
+The built jar is written to `build/libs`.
+
+## Links
+
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/redstone-throttle)
+- [Modrinth](https://modrinth.com/mod/createredstone-throttle)
+- [Issue tracker](https://github.com/z33awa/Redstone-Throttle/issues)
+
+## License
+
+All Rights Reserved. See the project metadata for details.
 
 ---
 
-## 中文
+## 简体中文
 
-### 简介
+**Create: Redstone Throttle（机械动力：红石节流阀）** 是一个紧凑的动力控制方块，
+可以使用红石信号调节已有传动系统的转速。
 
-本模组加入了一个方块——**红石转速调节器**（Redstone Speed Modulator）。它放置在两个机械动力网络之间，按红石信号在输入转速基础上累加正/负偏移量，把输出转速平滑、可控地调节到想要的值。
+### 功能
 
-特别适合 Create: Aeronautics 的载具用——平稳起飞、缓慢减速、精确停止；也可以单纯作为"红石远程调速"使用。
+- 支持六个方向放置，拥有独立的动力输入面和输出面。
+- 红色与蓝色红石控制面可绕传动轴旋转；红色加速，蓝色减速。
+- 提供三种控制模式，适合不同的自动化场景。
+- 更新间隔可在 10–200 tick（0.5–10 秒）之间调整。
+- 接入机械动力原生动力网络，正确响应应力与过载状态。
+- 佩戴工程师护目镜时显示输入、输出、模式和配置参数。
+- 可选兼容 Create Aeronautics。
 
-### 特性
+方块侧面的箭头由动力输入指向动力输出。红色和蓝色控制面可以分别接收红石信号。
 
-- **6 向放置**：水平/垂直均可；扳手点击轴端可绕动力轴旋转红石面，点击侧面可改变动力轴方向
-- **红石双向控制**：红色面增加偏移，蓝色面减少偏移，普通侧面箭头始终从输入指向输出
-- **三种模式**（GUI 内切换）：
-  - **跟随红石强度**：偏移变化速率 = 信号强度 × 0.5 RPM/步
-  - **固定速率**：忽略强度，任意非零信号都按设定的固定 RPM/步 累加
-  - **强度倍率**：即时响应，输出 = 输入转速 + (增加侧强度-减少侧强度) × 倍率
-- **可调步长**：1-256 RPM/步（滑块）
-- **可调更新间隔**：10-200 tick（0.5-10 秒，滑块）。间隔越长变化越缓和，并符合 Create 的快速变速保护节奏
-- **安全行为**：
-  - 输出不会反向旋转——降到 0 自动停下
-  - 拆掉输入轴后输出立即归零，再接回去偏移设置不丢
-  - 信号方向反转/上电瞬间立即响应，无 tick 延迟
-  - 偏移自动钳到对当前输入有效的范围，不会"还债"
-- **可视化**：前后两段独立旋转的轴端，前面按输出转速、后面按输入转速旋转
-- **护目镜支持**：显示当前模式、输出转速、步长、间隔
-- **外观**：基于 Create 链式传动箱 + 可调节齿轮箱风格
+### 控制模式
+
+- **跟随红石强度**：根据红、蓝两侧的信号差计算输出转速。
+- **固定转速**：存在有效动力输入时，输出设置的目标转速。
+- **红石强度 × 倍率**：
+
+```text
+输出转速 = 初始转速 +（红色信号 - 蓝色信号）× 倍率
+```
+
+倍率模式的初始转速可在 0–256 RPM 之间调整。旋转方向跟随动力输入；没有有效输入时，
+输出转速为 0。
 
 ### 依赖
 
-| 依赖 | 版本 |
-|---|---|
-| Minecraft | 1.21.1 |
-| NeoForge | 21.1.219 或更高 |
-| **Create** | 6.0.10 或更高 |
-| Create: Aeronautics | 可选 |
+- Minecraft 1.21.1
+- NeoForge 21.1.219 或更高版本
+- Create 6.0.10 或更高版本
 
-### 安装
+Create Aeronautics 为可选依赖。本模组需要同时安装在客户端与服务端。
 
-1. 安装 NeoForge 21.1.219+
-2. 把 Create 6.0.10+ 放到 `mods/` 文件夹
-3. 把本模组 jar 放到 `mods/` 文件夹
-4. 启动游戏
+### 安装与使用
 
-### 使用
-
-1. **合成**：4×红石 + 1×黄铜锭 + 2×齿轮 + 1×精密机械 + 1×黄铜机壳
-2. **放置**：方块前后两面会自动对齐到附近的动力轴方向
-3. **接入**：输入动力接到方块**背面**，输出从**前面**接出
-4. **红石控制**：
-   - **红色面**通红石 → 输出转速增加
-   - **蓝色面**通红石 → 输出转速减少
-   - 用扳手点击轴端可同时旋转两个红石面与普通箭头面
-5. **配置 GUI**：**Shift + 右键** 打开面板
-   - 模式按钮：跟随红石强度 ↔ 固定速率 ↔ 强度倍率
-   - 锁定速率滑块：1-256 RPM/步（固定速率模式）
-   - 强度倍率滑块：1-256×（强度倍率模式）
-   - 更新间隔滑块：10-200 tick（累积模式）
-
-### 调参建议
-
-| 需求 | 推荐设置 |
-|---|---|
-| 平稳缓慢的变化 | 固定速率，速率 4-16，间隔 100-200 tick |
-| 快速响应 | 固定速率，速率 64-256，间隔 10-20 tick（注意传动杆负载）|
-| 模拟旋钮 | 跟随强度模式，配合比较器输出强度 |
-| 红石精细控制 | 强度倍率模式，倍率 8-32×，即时响应无延迟 |
+1. 安装 Minecraft 1.21.1 对应的 NeoForge。
+2. 安装 Create 6.0.10 或更高版本。
+3. 将本模组 jar 放入客户端与服务端的 `mods` 文件夹。
+4. 将动力接入输入面，将机械连接到输出面。
+5. 给红色、蓝色控制面输入红石信号。
+6. 按住 Shift 右键方块打开设置界面。
+7. 将鼠标移到数值上滚动滚轮进行调整；按住 Shift 滚动时步长为 ×10。
+8. 使用扳手点击传动轴端面，可绕传动轴旋转红石控制面。
 
 ### 从源码构建
 
-```bash
-git clone https://github.com/z33awa/Redstone-Throttle.git
-cd Redstone-Throttle
-./gradlew build
+项目使用 Gradle Wrapper 和 Java 21：
+
+```powershell
+.\gradlew.bat build
 ```
 
-产物路径：`build/libs/redstone_throttle-1.21.1-<version>.jar`
-
-需要 Java 21。
-
-### 致谢
-
-- **simibubi** 和 Create 团队的 API 与代码参考
-- **Create: Aeronautics** 团队的飞行机械灵感
+构建产物位于 `build/libs`。
 
 ### 许可
 
-MIT License — 见 [LICENSE](LICENSE)。
-
-Create 模组本身、其纹理与模型属于 Create 团队，请遵守 [Create 的许可](https://github.com/Creators-of-Create/Create/blob/mc1.21.1/dev/LICENSE.md)。
+保留所有权利（All Rights Reserved），详情请以项目元数据为准。

@@ -166,13 +166,6 @@ public class RedstoneSpeedModulatorBlockEntity extends SplitShaftBlockEntity {
         return inputAbs < 0.01f ? 0f : Math.abs(outputSpeed) / inputAbs;
     }
 
-    public boolean canOutput() {
-        if (!hasSource() || Math.abs(outputSpeed) < 0.01f)
-            return false;
-        Direction facing = getBlockState().getValue(RedstoneSpeedModulatorBlock.FACING);
-        return getSourceFacing() == facing.getOpposite();
-    }
-
     public float getOutputSpeed() {
         return outputSpeed;
     }

@@ -96,7 +96,7 @@ All Rights Reserved. See the project metadata for details.
 
 ## 简体中文
 
-**Create: Redstone Throttle（机械动力：红石节流阀）** 是一个紧凑的动力控制方块，
+**Create: Redstone Throttle（机械动力：红石调速器）** 是一个紧凑的动力控制方块，
 可以使用红石信号调节已有传动系统的转速。
 
 ### 功能

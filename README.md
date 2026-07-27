@@ -5,6 +5,7 @@
 [![Minecraft 1.21.1](https://img.shields.io/badge/Minecraft-1.21.1-62B47A)](https://www.minecraft.net/)
 [![NeoForge](https://img.shields.io/badge/Loader-NeoForge-EF7B45)](https://neoforged.net/)
 [![Create 6.0.10+](https://img.shields.io/badge/Create-6.0.10%2B-CDB894)](https://www.curseforge.com/minecraft/mc-mods/create)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CurseForge](https://img.shields.io/badge/Download-CurseForge-F16436)](https://www.curseforge.com/minecraft/mc-mods/redstone-throttle)
 [![Modrinth](https://img.shields.io/badge/Download-Modrinth-00AF5C)](https://modrinth.com/mod/createredstone-throttle)
 
@@ -90,7 +91,7 @@ The built jar is written to `build/libs`.
 
 ## License
 
-All Rights Reserved. See the project metadata for details.
+Released under the [MIT License](LICENSE). Copyright © 2026 z33awa.
 
 ---
 
@@ -155,4 +156,4 @@ Create Aeronautics 为可选依赖。本模组需要同时安装在客户端与�
 
 ### 许可
 
-保留所有权利（All Rights Reserved），详情请以项目元数据为准。
+本项目采用 [MIT 许可证](LICENSE)。Copyright © 2026 z33awa。
